@@ -1,5 +1,5 @@
 ---
-last_modified_on: "2020-04-06"
+last_modified_on: "2020-04-07"
 delivery_guarantee: "best_effort"
 component_title: "Syslog"
 description: "The Vector `syslog` source ingests data through the Syslog protocol and outputs `log` events."
@@ -64,9 +64,9 @@ ingests data through the [Syslog protocol][urls.syslog_5424] and outputs
   # General
   type = "syslog" # required
   address = "0.0.0.0:514" # required, required when mode = "tcp" or mode = "udp"
+  max_length = 102400 # optional, default, bytes
   mode = "tcp" # required
   path = "/path/to/socket" # required, required when mode = "unix"
-  max_length = 102400 # optional, default, bytes
 
   # Context
   host_key = "host" # optional, default
@@ -84,31 +84,6 @@ ingests data through the [Syslog protocol][urls.syslog_5424] and outputs
 </Tabs>
 
 <Fields filters={true}>
-<Field
-  common={true}
-  defaultValue={null}
-  enumValues={null}
-  examples={["0.0.0.0:514","systemd","systemd#2"]}
-  groups={[]}
-  name={"address"}
-  path={null}
-  relevantWhen={{"mode":["tcp","udp"]}}
-  required={true}
-  templateable={false}
-  type={"string"}
-  unit={null}
-  warnings={[]}
-  >
-
-### address
-
-The TCP or UDP address to listen for connections on, or "systemd#N" to use the
-Nth socket passed by systemd socket activation.
-
-
-
-
-</Field>
 <Field
   common={false}
   defaultValue={"host"}
@@ -132,6 +107,31 @@ be globally set via the [global [`host_key`](#host_key)
 option][docs.reference.global-options#host_key].
 
  See [Context](#context) for more info.
+
+
+</Field>
+<Field
+  common={true}
+  defaultValue={null}
+  enumValues={null}
+  examples={["0.0.0.0:514","systemd","systemd#2"]}
+  groups={[]}
+  name={"address"}
+  path={null}
+  relevantWhen={{"mode":["tcp","udp"]}}
+  required={true}
+  templateable={false}
+  type={"string"}
+  unit={null}
+  warnings={[]}
+  >
+
+### address
+
+The TCP or UDP address to listen for connections on, or "systemd#N" to use the
+Nth socket passed by systemd socket activation.
+
+
 
 
 </Field>
@@ -701,6 +701,7 @@ will be replaced before being evaluated.
 
 You can learn more in the
 [Environment Variables][docs.configuration#environment-variables] section.
+
 ### Line Delimiters
 
 Each line is read until a new line delimiter (the `0xA` byte) is found.
@@ -723,7 +724,7 @@ requesting support for your specific format.
 ### TLS
 
 Vector uses [Openssl][urls.openssl] for TLS protocols for it's battle-tested
-and reliable security. You can enable and adjust TLS behavior via the `tls.*`
+and reliable security. You can enable and adjust TLS behavior via the [`tls.*`](#tls)
 options.
 
 

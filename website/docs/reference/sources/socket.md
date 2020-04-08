@@ -1,5 +1,5 @@
 ---
-last_modified_on: "2020-04-06"
+last_modified_on: "2020-04-07"
 delivery_guarantee: "best_effort"
 component_title: "Socket"
 description: "The Vector `socket` source ingests data through a socket, such as a TCP, UDP, or UDS socket and outputs `log` events."
@@ -53,8 +53,8 @@ ingests data through a [socket][urls.socket], such as a [TCP][urls.tcp],
 [sources.my_source_id]
   type = "socket" # required
   address = "0.0.0.0:9000" # required, required when mode = "tcp" or mode = "udp"
-  mode = "tcp" # required
   max_length = 102400 # optional, default, bytes
+  mode = "tcp" # required
 ```
 
 </TabItem>
@@ -65,8 +65,8 @@ ingests data through a [socket][urls.socket], such as a [TCP][urls.tcp],
   # General
   type = "socket" # required
   address = "0.0.0.0:9000" # required, required when mode = "tcp" or mode = "udp"
-  mode = "tcp" # required
   max_length = 102400 # optional, default, bytes
+  mode = "tcp" # required
   shutdown_timeout_secs = 30 # optional, default, seconds, relevant when mode = "tcp"
 
   # Context
@@ -88,8 +88,8 @@ ingests data through a [socket][urls.socket], such as a [TCP][urls.tcp],
 [sources.my_source_id]
   type = "socket" # required
   address = "0.0.0.0:9000" # required, required when mode = "tcp" or mode = "udp"
-  mode = "udp" # required
   max_length = 102400 # optional, default, bytes
+  mode = "udp" # required
 ```
 
 </TabItem>
@@ -100,8 +100,8 @@ ingests data through a [socket][urls.socket], such as a [TCP][urls.tcp],
   # General
   type = "socket" # required
   address = "0.0.0.0:9000" # required, required when mode = "tcp" or mode = "udp"
-  mode = "udp" # required
   max_length = 102400 # optional, default, bytes
+  mode = "udp" # required
 
   # Context
   host_key = "host" # optional, default
@@ -113,9 +113,9 @@ ingests data through a [socket][urls.socket], such as a [TCP][urls.tcp],
 ```toml title="vector.toml"
 [sources.my_source_id]
   type = "socket" # required
+  max_length = 102400 # optional, default, bytes
   mode = "unix" # required
   path = "/path/to/socket" # required, required when mode = "unix"
-  max_length = 102400 # optional, default, bytes
 ```
 
 </TabItem>
@@ -125,9 +125,9 @@ ingests data through a [socket][urls.socket], such as a [TCP][urls.tcp],
 [sources.my_source_id]
   # General
   type = "socket" # required
+  max_length = 102400 # optional, default, bytes
   mode = "unix" # required
   path = "/path/to/socket" # required, required when mode = "unix"
-  max_length = 102400 # optional, default, bytes
 
   # Context
   host_key = "host" # optional, default
@@ -137,32 +137,6 @@ ingests data through a [socket][urls.socket], such as a [TCP][urls.tcp],
 </Tabs>
 
 <Fields filters={true}>
-<Field
-  common={true}
-  defaultValue={null}
-  enumValues={null}
-  examples={["0.0.0.0:9000","systemd","systemd#3"]}
-  groups={["tcp","udp"]}
-  name={"address"}
-  path={null}
-  relevantWhen={{"mode":["tcp","udp"]}}
-  required={true}
-  templateable={false}
-  type={"string"}
-  unit={null}
-  warnings={[]}
-  >
-
-### address
-
-The address to listen for connections on, or `systemd#N` to use the Nth socket
-passed by systemd socket activation. If an address is used it _must_ include a
-port.
-
-
-
-
-</Field>
 <Field
   common={false}
   defaultValue={"host"}
@@ -186,6 +160,32 @@ be globally set via the [global [`host_key`](#host_key)
 option][docs.reference.global-options#host_key].
 
  See [Context](#context) for more info.
+
+
+</Field>
+<Field
+  common={true}
+  defaultValue={null}
+  enumValues={null}
+  examples={["0.0.0.0:9000","systemd","systemd#3"]}
+  groups={["tcp","udp"]}
+  name={"address"}
+  path={null}
+  relevantWhen={{"mode":["tcp","udp"]}}
+  required={true}
+  templateable={false}
+  type={"string"}
+  unit={null}
+  warnings={[]}
+  >
+
+### address
+
+The address to listen for connections on, or `systemd#N` to use the Nth socket
+passed by systemd socket activation. If an address is used it _must_ include a
+port.
+
+
 
 
 </Field>
@@ -586,10 +586,11 @@ will be replaced before being evaluated.
 
 You can learn more in the
 [Environment Variables][docs.configuration#environment-variables] section.
+
 ### TLS
 
 Vector uses [Openssl][urls.openssl] for TLS protocols for it's battle-tested
-and reliable security. You can enable and adjust TLS behavior via the `tls.*`
+and reliable security. You can enable and adjust TLS behavior via the [`tls.*`](#tls)
 options.
 
 
